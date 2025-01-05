@@ -70,14 +70,14 @@ export function Hero() {
   };
 
   return (
-    <div className="relative min-h-screen">
-      <iframe
-        className="absolute inset-0 w-[calc(100%+50px)] h-full left-[-25px] object-fill"
-        src="https://www.youtube.com/embed/Mi-qP3I1fHU?autoplay=1&mute=1&loop=1&playlist=Mi-qP3I1fHU"
-        frameborder="0"
-        allow="autoplay; encrypted-media"
-        allowfullscreen
-      ></iframe>
+    <div className="relative min-h-screen items-center justify-center flex flex-col text-white bg-cover bg-center bg-no-repeat bg-fixed bg-hero">
+  <iframe
+    className="absolute inset-0 w-full h-full object-cover"
+    src="https://www.youtube.com/embed/Mi-qP3I1fHU?autoplay=1&mute=1&loop=1&playlist=Mi-qP3I1fHU"
+    frameborder="0"
+    allow="autoplay; encrypted-media"
+    allowfullscreen
+  ></iframe>
 
       <div className="absolute inset-0 bg-black/50" />
       <div className="fixed z-10 top-[100px] w-full overflow-hidden bg-orange-500 text-white bg-opacity-70 text-white">
