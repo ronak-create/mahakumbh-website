@@ -15,8 +15,6 @@ export function Hero() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
-  // Remove the useEffect as navigation will be handled in login/logout functions
-
   const handleRegisterChange = (e) => {
     setRegisterData({ ...registerData, [e.target.name]: e.target.value });
   };
@@ -27,17 +25,15 @@ export function Hero() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", formData);
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        formData
+      );
       const { token, user: userData } = response.data;
-  
-      // Store the token in local storage for future requests
+
       localStorage.setItem("token", token);
-  
-      // Call the login function from context which will handle navigation
       login(token, userData);
-      navigate("/dashboard"); // Navigate directly after login
-  
-      // Close the login modal
+      navigate("/dashboard");
       setShowLogin(false);
     } catch (err) {
       console.error("Login failed", err);
@@ -52,14 +48,13 @@ export function Hero() {
       return alert("Password must be at least 6 characters");
     }
 
-    // Proceed with registration
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/register",
         registerData
       );
       console.log(response.data.message);
-      setShowRegister(false); // Close the register modal after successful registration
+      setShowRegister(false);
     } catch (err) {
       console.error(
         "Registration failed",
@@ -69,27 +64,49 @@ export function Hero() {
   };
 
   const handleLogout = () => {
-    logout(); // Logout from the context
-    localStorage.removeItem("authToken"); // Remove the auth token from local storage
-    navigate("/"); // Redirect to login page
+    logout();
+    localStorage.removeItem("authToken");
+    navigate("/");
   };
 
   return (
     <div className="relative min-h-screen">
-      <video
-        autoPlay
-        muted
-        loop
-        className="absolute inset-0 w-full h-full object-cover"
-        poster="https://images.unsplash.com/photo-1561361058-c24cecae35ca?auto=format&fit=crop&q=80"
-      >
-        <source src="https://youtu.be/FrUZ2_m9llY" type="video/mp4" />
-      </video>
+      <iframe
+        className="absolute inset-0 w-[calc(100%+50px)] h-full left-[-25px] object-fill"
+        src="https://www.youtube.com/embed/Mi-qP3I1fHU?autoplay=1&mute=1&loop=1&playlist=Mi-qP3I1fHU"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen
+      ></iframe>
 
       <div className="absolute inset-0 bg-black/50" />
+      <div className="fixed z-10 top-[100px] w-full overflow-hidden bg-orange-500 text-white bg-opacity-70 text-white">
+        <div className="whitespace-nowrap animate-scroll">
+          <span className="inline-block px-4 font-bold text-lg">
+            Early Bird Offer: Flat 10% Discount (On bookings done 30 days in
+            advance)
+          </span>
+          <span className="inline-block px-4 font-bold text-lg">
+            Early Bird Offer: Flat 10% Discount (On bookings done 30 days in
+            advance)
+          </span>
+          <span className="inline-block px-4 font-bold text-lg">
+            Early Bird Offer: Flat 10% Discount (On bookings done 30 days in
+            advance)
+          </span>
+          <span className="inline-block px-4 font-bold text-lg">
+            Early Bird Offer: Flat 10% Discount (On bookings done 30 days in
+            advance)
+          </span>
+          <span className="inline-block px-4 font-bold text-lg">
+            Early Bird Offer: Flat 10% Discount (On bookings done 30 days in
+            advance)
+          </span>
+        </div>
+      </div>
 
       <div className="relative container mx-auto px-4 py-32 text-white">
-        <h1 className="text-5xl md:text-7xl font-bold mb-6">
+        <h1 className="text-5xl md:text-7xl font-bold mb-6 mt-12">
           Experience the Divine
           <span className="block text-orange-500">Mahakumbh Mela 2025</span>
         </h1>
@@ -99,18 +116,18 @@ export function Hero() {
           Let us guide your sacred journey.
         </p>
 
-        <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg max-w-4xl">
+        <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg max-w-xl">
           <div className="grid md:grid-cols-2 gap-4">
             {!isAuthenticated ? (
               <>
                 <button
-                  className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 transition"
+                  className="bg-orange-600 text-white px-6 py-2 rounded-full border-2 border-orange-600 hover:bg-orange-700 hover:border-orange-700 transition-all duration-300"
                   onClick={() => setShowLogin(true)}
                 >
                   Login
                 </button>
                 <button
-                  className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 transition"
+                  className="bg-transparent text-orange-600 px-6 py-2 rounded-full border-2 border-orange-600 hover:bg-orange-600 hover:text-white transition-all duration-300"
                   onClick={() => setShowRegister(true)}
                 >
                   Register
@@ -125,7 +142,7 @@ export function Hero() {
                   <span>Welcome, {user?.name}!</span>
                 </div>
                 <button
-                  className="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition"
+                  className="bg-red-600 text-white px-6 py-2 rounded-full border-2 border-red-600 hover:bg-red-700 hover:border-red-700 transition-all duration-300"
                   onClick={handleLogout}
                 >
                   Logout
@@ -140,7 +157,7 @@ export function Hero() {
       {showLogin && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-md w-80">
-            <h2 className="text-lg font-bold mb-4">Login</h2>
+            <h2 className="text-lg font-bold mb-4 text-gray-800">Login</h2>
             <input
               type="email"
               name="email"
@@ -158,13 +175,13 @@ export function Hero() {
               className="w-full mb-4 p-2 border rounded"
             />
             <button
-              className="bg-orange-600 text-white px-4 py-2 rounded w-full"
+              className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 transition w-full"
               onClick={handleLogin}
             >
               Login
             </button>
             <button
-              className="text-red-600 mt-2 w-full"
+              className="mt-2 w-full px-6 py-2 rounded border border-orange-600 text-orange-600 hover:bg-orange-50 transition"
               onClick={() => setShowLogin(false)}
             >
               Cancel
@@ -177,7 +194,7 @@ export function Hero() {
       {showRegister && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-md w-80">
-            <h2 className="text-lg font-bold mb-4">Register</h2>
+            <h2 className="text-lg font-bold mb-4 text-gray-800">Register</h2>
             <input
               type="text"
               name="name"
@@ -203,13 +220,13 @@ export function Hero() {
               className="w-full mb-4 p-2 border rounded"
             />
             <button
-              className="bg-orange-600 text-white px-4 py-2 rounded w-full"
+              className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700 transition w-full"
               onClick={handleRegister}
             >
               Register
             </button>
             <button
-              className="text-red-600 mt-2 w-full"
+              className="mt-2 w-full px-6 py-2 rounded border border-orange-600 text-orange-600 hover:bg-orange-50 transition"
               onClick={() => setShowRegister(false)}
             >
               Cancel

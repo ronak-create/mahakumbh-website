@@ -11,7 +11,7 @@ const paymentRoutes = require('../backend/routes/payment');
 const app = express();
 
 app.use(cors({
-  origin: ['http://localhost:3000',"http://localhost:5002"], // Update to the port your React app is running on
+  origin: ['http://localhost:3000',"http://localhost:5001","http://localhost:5002"], // Update to the port your React app is running on
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));

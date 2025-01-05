@@ -25,9 +25,10 @@ router.post('/', verifyToken, async (req, res) => {
 });
 
 // Get user bookings
-router.get('/', verifyToken, async (req, res) => {
+router.get('/get-booking', verifyToken, async (req, res) => {
   try {
     const bookings = await Booking.find({ user: req.user.id });
+    console.log("booking", bookings);
     if (bookings.length === 0) {
       return res.status(404).json({ message: 'No bookings found for this user.' });
     }

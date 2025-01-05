@@ -14,7 +14,7 @@ export function Header() {
   }
 
   return (
-    <header className="fixed w-full bg-white/80 backdrop-blur-md z-50 shadow-sm">
+    <header className="fixed w-full bg-white/40 backdrop-blur-md z-50 shadow-sm">
       <nav className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <RouterLink

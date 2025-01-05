@@ -5,35 +5,31 @@ import { Link, useNavigate } from 'react-router-dom';
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const [booking, setBooking] = useState(null);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
       navigate('/', { replace: true });
-      return;
+    } else {
+      fetch('http://localhost:5000/api/bookings/get-booking', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch booking');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          setBooking(data);
+        })
+        .catch((error) => {
+          console.error('Error fetching booking details:', error);
+        });
     }
-
-    fetch('http://localhost:5000/api/bookings', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${user.token}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to fetch booking');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setBooking(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching booking details:', error);
-        setLoading(false);
-      });
   }, [user, navigate]);
 
   const handleBookPackage = () => {
@@ -41,25 +37,9 @@ const Dashboard = () => {
   };
 
   const handleLogout = () => {
-    logout(); // This will clear the user and token from context
-    navigate('/', { replace: true }); // Redirect to home page
+    logout();
+    navigate('/', { replace: true });
   };
-
-  if (loading) {
-    return (
-      <div className="pt-28 container mx-auto px-4 py-8">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <div className="h-48 bg-gray-200 rounded"></div>
-            <div className="h-48 bg-gray-200 rounded"></div>
-            <div className="h-48 bg-gray-200 rounded"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (!user) {
     return null; // The useEffect will handle redirect
@@ -67,7 +47,7 @@ const Dashboard = () => {
 
   if (!booking) {
     return (
-      <div className="pt-28 container mx-auto px-4 py-8">
+      <div className="pt-28 container min-h-screen mx-auto px-4 py-8">
         <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8">
           <div className="text-blue-700 font-medium">No Bookings Found</div>
           <p className="text-blue-600">You haven't made any bookings yet. Book your first package now!</p>
@@ -98,7 +78,7 @@ const Dashboard = () => {
             <span className="mr-2">➕</span>
             Book a Package
           </button>
-          <button 
+          <button
             onClick={handleLogout}
             className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition flex items-center"
           >

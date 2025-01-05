@@ -1,6 +1,5 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 
 const AuthContext = createContext();
 
@@ -9,31 +8,33 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // Check if token is present in localStorage
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      // If token exists, set the user as authenticated
+      setIsAuthenticated(true);
+      setUser({ token }); // You can keep user details if needed
+      // navigate("/dashboard"); // Navigate to dashboard if authenticated
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, [navigate]); // This will run once when the component mounts
+
   const login = (token, userData) => {
-    localStorage.setItem('token', token);
+    localStorage.setItem('token', token); // Store token in localStorage
     setUser({ ...userData, token });
     setIsAuthenticated(true);
-    // navigate("/dashboard"); // Assuming successful login leads to dashboard
+    navigate("/dashboard"); // Navigate to dashboard on login
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('token'); // Remove token on logout
     setUser(null);
     setIsAuthenticated(false);
-    navigate("/");
+    navigate("/"); // Redirect to home or login page
   };
-
-  // Optionally, you might want to check for token existence on initial load:
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Here you might want to attempt an authenticated request to fetch user data
-      // but since we're not doing explicit token verification:
-      setIsAuthenticated(true);
-      // If you have a route to fetch user profile:
-      // fetchUserProfile().then(profile => setUser({ ...profile, token }));
-    }
-  }, []); 
 
   return (
     <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>

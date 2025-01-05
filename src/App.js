@@ -16,6 +16,7 @@ import { useAuth } from "./context/AuthContext"; // Custom hook for authenticati
 import "./index.css";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { AuthProvider } from "./context/AuthContext";
+import Footer from './components/Footer'; // Import Footer
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function AppContent() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
       </Routes>
+      <Footer /> {/* Add Footer */}
     </div>
   );
 }

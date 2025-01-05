@@ -4,6 +4,7 @@ import { PersonalDetails } from './PersonalDetails';
 import AccommodationDetails from './AccommodationDetails';
 import { DateSelection } from './DateSelection';
 import { GuestDetails } from './GuestDetails';
+import { BookingSummary } from './BookingSummary';
 
 export function BookingForm() {
   const [step, setStep] = React.useState(1);
@@ -12,19 +13,17 @@ export function BookingForm() {
     phoneNumber: '',
     accommodationType: '',
     checkIn: '',
+    checkOut: '', // Added checkOut for date range
     adults: '',
     children: ''
   });
+  const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const [selectedPackage, setSelectedPackage] = React.useState({ title: 'Default Package', price: 1000 });
 
-  // Assume token is stored in localStorage or state
-  const token = localStorage.getItem('userToken'); // Replace this if needed to get the token from your user state
+  const token = localStorage.getItem('token');
 
   const handleInputChange = (name, value) => {
-    setFormData(prev => {
-      const updatedData = { ...prev, [name]: value };
-      console.log('Updated Form Data:', updatedData); // Log the updated data
-      return updatedData;
-    });
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -40,14 +39,14 @@ export function BookingForm() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` // Send the token here
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(formData)
       });
 
       if (response.ok) {
         console.log('Form data successfully submitted');
-        // Handle success (e.g., reset form, show success message)
+        setIsSubmitted(true);
       } else {
         console.error('Failed to submit form data');
       }
@@ -55,6 +54,10 @@ export function BookingForm() {
       console.error('Error submitting form data:', error);
     }
   };
+
+  if (isSubmitted) {
+    return <BookingSummary formData={formData} selectedPackage={selectedPackage} />;
+  }
 
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
@@ -66,31 +69,19 @@ export function BookingForm() {
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
         {step === 1 && (
-          <PersonalDetails
-            formData={formData}
-            onChange={handleInputChange}
-          />
+          <PersonalDetails formData={formData} onChange={handleInputChange} />
         )}
 
         {step === 2 && (
-          <AccommodationDetails
-            formData={formData}
-            onChange={handleInputChange}
-          />
+          <AccommodationDetails formData={formData} onChange={handleInputChange} setSelectedPackage={setSelectedPackage} />
         )}
 
         {step === 3 && (
-          <DateSelection
-            formData={formData}
-            onChange={handleInputChange}
-          />
+          <DateSelection formData={formData} onChange={handleInputChange} />
         )}
 
         {step === 4 && (
-          <GuestDetails
-            formData={formData}
-            onChange={handleInputChange}
-          />
+          <GuestDetails formData={formData} onChange={handleInputChange} />
         )}
 
         <div className="flex justify-between pt-4">
