@@ -10,11 +10,7 @@ const paymentRoutes = require('../backend/routes/payment');
 // Initialize the app
 const app = express();
 
-app.use(cors({
-  origin: ['http://localhost:3000',"http://localhost:5001","http://localhost:5002"], // Update to the port your React app is running on
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
-}));
+app.use(cors());
 
 app.use(express.json());
 app.use('/api/auth', authRoutes);
@@ -27,7 +23,7 @@ app.get('/', (req, res) => {
 });
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/MahaKumbh", { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect("mongodb+srv://ronak:abc%40123@cluster0.yzf1p.mongodb.net/myDatabase?retryWrites=true&w=majority&appName=Cluster0"||process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error("MongoDB connection error", err));
 

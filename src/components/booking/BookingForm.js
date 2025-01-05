@@ -28,7 +28,7 @@ export function BookingForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!token) {
       console.error('No token found. Please log in.');
       return;

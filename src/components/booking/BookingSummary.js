@@ -11,7 +11,15 @@ export function BookingSummary({ formData, selectedPackage }) {
 
   // Function to convert price string to number
   const convertToNumber = (priceString) => {
-    return parseFloat(priceString.replace(/[^0-9.]/g, ""));
+    const numericValue = parseFloat(priceString.replace(/[^0-9.]/g, "")) * 10000;
+    console.log(numericValue);
+    return isNaN(numericValue) ? 0 : numericValue;
+  };
+
+  const generateOrderId = () => {
+    const timestamp = Date.now(); // Get current timestamp
+    const randomString = Math.random().toString(36).substring(2, 10); // Generate random string
+    return `${timestamp}-${randomString}`; // Combine them to form the unique order ID
   };
 
   const getTotalPrice = () => {
@@ -20,12 +28,15 @@ export function BookingSummary({ formData, selectedPackage }) {
       const price = convertToNumber(selectedType.discountedPrice);
       return price;
     }
-    return 0;
+    console.warn('Invalid accommodation type');
+    return 0; // Return a default value in case of invalid accommodation type
   };
 
   const handleCheckout = async () => {
     const totalAmount = getTotalPrice();
     const initialPayment = totalAmount * 0.25;
+
+    const orderId = generateOrderId(); // Generate the unique order ID
 
     const response = await fetch('http://localhost:5000/api/payment/createUpfrontPayment', {
       method: 'POST',
@@ -35,7 +46,7 @@ export function BookingSummary({ formData, selectedPackage }) {
       },
       body: JSON.stringify({
         amount: initialPayment,
-        orderId: 'unique_order_id',
+        orderId: orderId, // Use the generated order ID
         customerInfo: {
           name: formData.name,
           phone: formData.phoneNumber,
@@ -55,9 +66,9 @@ export function BookingSummary({ formData, selectedPackage }) {
     const phonePe = window.PhonePe;
 
     phonePe.init({
-      merchantId: 'YOUR_MERCHANT_ID',
+      merchantId: 'M221E1ZZN1MDP', // Use the provided merchant ID
       paymentToken: paymentToken,
-      redirectUrl: 'YOUR_REDIRECT_URL',
+      redirectUrl: '/dashboard', // Use the provided redirect URL
     });
 
     phonePe.startPayment();

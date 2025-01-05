@@ -38,6 +38,15 @@ function AppContent() {
     return <div>Loading...</div>;
   }
 
+  // Show alert for unauthenticated users trying to access protected pages
+  const ProtectedRoute = ({ element }) => {
+    if (!user) {
+      alert("You need to log in to access this page.");
+      return <Navigate to="/" />;
+    }
+    return element;
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -47,17 +56,17 @@ function AppContent() {
         {/* Dashboard is protected, only accessible if user is logged in */}
         <Route
           path="/dashboard"
-          element={user ? <Dashboard /> : <Navigate to="/" />}
+          element={<ProtectedRoute element={<Dashboard />} />}
         />
 
         {/* Protected Routes */}
         <Route
           path="/events"
-          element={user ? <EventsPage /> : <Navigate to="/" />}
+          element={<ProtectedRoute element={<EventsPage />} />}
         />
         <Route
           path="/booking"
-          element={user ? <BookingPage /> : <Navigate to="/" />}
+          element={<ProtectedRoute element={<BookingPage />} />}
         />
 
         {/* Public Routes */}
